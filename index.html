@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine? 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #ff9a9e 100%);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Floating hearts background */
+        .heart-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 30px;
+            opacity: 0.3;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(10deg);
+            }
+        }
+
+        /* Main card */
+        .container {
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 50px 60px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            max-width: 500px;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Cat emoji */
+        .emoji {
+            font-size: 100px;
+            margin-bottom: 20px;
+            display: inline-block;
+            animation: bounce 2s infinite;
+            position: relative;
+        }
+
+        .emoji::after {
+            content: '💕';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 40px;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+        }
+
+        /* Text */
+        h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .question {
+            font-size: 28px;
+            color: #555;
+            margin-bottom: 40px;
+            font-weight: 600;
+        }
+
+        /* Buttons container */
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 18px 45px;
+            font-size: 20px;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        #yesBtn {
+            background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%);
+            color: white;
+        }
+
+        #yesBtn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(192, 108, 132, 0.4);
+        }
+
+        #noBtn {
+            background: #e0e0e0;
+            color: #666;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        #noBtn:hover {
+            background: #d0d0d0;
+        }
+
+        /* Message */
+        .message {
+            font-size: 16px;
+            color: #888;
+            font-style: italic;
+            margin-top: 15px;
+        }
+
+        /* Success message */
+        .success {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .success h2 {
+            color: #ff6b9d;
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+
+        .success p {
+            color: #666;
+            font-size: 20px;
+        }
+
+        .celebration {
+            font-size: 50px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background hearts -->
+    <div class="heart-bg" id="heartBg"></div>
+
+    <!-- Main container -->
+    <div class="container" id="mainCard">
+        <div class="emoji">🐱</div>
+        <h1>Hey There!</h1>
+        <p class="question">Will you be my Valentine? 💖</p>
+        
+        <div class="buttons">
+            <button id="yesBtn">Yes! 💕</button>
+            <button id="noBtn">No</button>
+        </div>
+        
+        <p class="message">"No" seems a bit shy 💭</p>
+    </div>
+
+    <!-- Success message (hidden initially) -->
+    <div class="container success" id="successCard">
+        <div class="celebration">🎉✨💖✨🎉</div>
+        <h2>Yay! 🥰</h2>
+        <p>I knew you'd say yes!</p>
+        <div class="celebration">💕💕💕</div>
+    </div>
+
+    <script>
+        // Create floating hearts in background
+        const heartBg = document.getElementById('heartBg');
+        for (let i = 0; i < 15; i++) {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.textContent = '💕';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.top = Math.random() * 100 + '%';
+            heart.style.animationDelay = Math.random() * 3 + 's';
+            heartBg.appendChild(heart);
+        }
+
+        // Get buttons
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const mainCard = document.getElementById('mainCard');
+        const successCard = document.getElementById('successCard');
+
+        // Yes button - show success message
+        yesBtn.addEventListener('click', function() {
+            mainCard.style.display = 'none';
+            successCard.style.display = 'block';
+            
+            // Create confetti effect
+            createConfetti();
+        });
+
+        // No button - moves away when mouse gets close
+        noBtn.addEventListener('mouseover', function() {
+            const x = Math.random() * (window.innerWidth - 200);
+            const y = Math.random() * (window.innerHeight - 100);
+            
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+        });
+
+        // Confetti function
+        function createConfetti() {
+            const colors = ['#ff6b9d', '#c06c84', '#ffd700', '#ff1493', '#ff69b4'];
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.style.position = 'fixed';
+                    confetti.style.left = Math.random() * window.innerWidth + 'px';
+                    confetti.style.top = '-20px';
+                    confetti.style.width = '10px';
+                    confetti.style.height = '10px';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.borderRadius = '50%';
+                    confetti.style.zIndex = '1000';
+                    confetti.style.pointerEvents = 'none';
+                    document.body.appendChild(confetti);
+
+                    const fall = confetti.animate([
+                        { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                        { transform: `translateY(${window.innerHeight}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                    ], {
+                        duration: 3000,
+                        easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                    });
+
+                    fall.onfinish = () => confetti.remove();
+                }, i * 30);
+            }
+        }
+    </script>
+</body>
+</html>
